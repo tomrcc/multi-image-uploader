@@ -21,7 +21,8 @@ type CloudCannonFile = {
   data: {
     addArrayItem(opts: { slug: string; item?: unknown }): Promise<unknown>;
   };
-  getInputConfig?(opts: { slug: string }): unknown;
+  // May be sync or async depending on API version — always `await` it.
+  getInputConfig?(opts: { slug: string }): unknown | Promise<unknown>;
 };
 
 type CloudCannonApi = {
@@ -108,10 +109,13 @@ async function uploadAll(
   const api = await apiPromise;
   const file = api.currentFile();
 
+  // getInputConfig may return a Promise — it MUST be awaited to a plain object
+  // before being handed to uploadFile(), which postMessages it to the parent
+  // window (a pending Promise → DataCloneError, and the upload never runs).
   let inputConfig: unknown;
   try {
-    inputConfig = file.getInputConfig?.({ slug: `${slug}.0.image_path` });
-    log("getInputConfig →", inputConfig);
+    inputConfig = await file.getInputConfig?.({ slug: `${slug}.0.image_path` });
+    log("getInputConfig (resolved) →", inputConfig);
   } catch (e) {
     warn("getInputConfig threw (continuing without it):", e);
   }
