@@ -1,0 +1,63 @@
+---
+import type { ImageMetadata } from "astro";
+
+interface GalleryImage {
+  image_path: string;
+  alt_text: string;
+}
+
+interface Props {
+  images?: GalleryImage[];
+}
+
+const { images = [] } = Astro.props;
+
+// Build-time resolution for images that live in the repo. Freshly uploaded
+// paths won't be in the glob — they fall back to the raw path, which the
+// Visual Editor resolves for preview. Plain <img> (not <Picture>) so the
+// client-side re-render can set `src` directly on new uploads.
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/**/*.{jpeg,jpg,png,gif,svg,webp,avif}",
+  { eager: true },
+);
+
+const resolve = (path: string) => allImages[path]?.default?.src ?? path;
+---
+
+<section class="py-12 md:py-20">
+  <div class="mx-auto max-w-6xl px-8 flex flex-col gap-6">
+    <div
+      data-editable="array"
+      data-prop="images"
+      class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {
+        images.map((image) => (
+          <figure
+            data-editable="array-item"
+            class="overflow-hidden rounded-lg bg-gray-50">
+            <img
+              data-editable="image"
+              data-prop-src="image_path"
+              data-prop-alt="alt_text"
+              src={resolve(image.image_path)}
+              alt={image.alt_text}
+              loading="lazy"
+              class="w-full h-48 object-contain"
+            />
+          </figure>
+        ))
+      }
+    </div>
+
+    <multi-image-uploader></multi-image-uploader>
+  </div>
+</section>
+
+<style is:global>
+  multi-image-uploader {
+    display: none;
+  }
+  body.cms-editor-active multi-image-uploader {
+    display: block;
+  }
+</style>

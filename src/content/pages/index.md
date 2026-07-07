@@ -76,4 +76,10 @@ content_blocks:
     button:
       text: CloudCannon Docs
       link: https://cloudcannon.com/documentation/
+  - _name: Gallery
+    images:
+      - image_path: /src/assets/images/transparent-bg/undraw-data-input.svg
+        alt_text: An illustration of someone entering data into a form.
+      - image_path: /src/assets/images/transparent-bg/undraw-startup.svg
+        alt_text: An illustration of someone sitting at a desk.
 ---

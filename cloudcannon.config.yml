@@ -244,6 +244,28 @@ _structures:
           _name: TextBlock
           heading:
           text_content:
+      - label: Gallery
+        icon: photo_library
+        preview:
+          text:
+            - Gallery
+          icon: photo_library
+        value:
+          _name: Gallery
+          images: []
+  gallery_images:
+    values:
+      - label: Image
+        icon: image
+        preview:
+          text:
+            - key: alt_text
+            - Image
+          image:
+            - key: image_path
+        value:
+          image_path:
+          alt_text:
   hero_blocks:
     values:
       - label: Hero
@@ -278,6 +300,11 @@ _inputs:
     type: object
     options:
       structures: _structures.hero_blocks
+  images:
+    type: array
+    options:
+      empty_type: array
+      structures: _structures.gallery_images
   text_content:
     type: markdown
     options:
