@@ -82,4 +82,8 @@ content_blocks:
         alt_text: An illustration of someone entering data into a form.
       - image_path: /src/assets/images/transparent-bg/undraw-startup.svg
         alt_text: An illustration of someone sitting at a desk.
+      - image_path: /src/assets/images/send-it-ai.png
+        alt_text: ''
+      - image_path: /src/assets/images/screenshot-2026-06-05-at-12-37-42-pm.png
+        alt_text: ''
 ---
