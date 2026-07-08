@@ -131,11 +131,19 @@ class MultiImageUploader extends HTMLElement {
   private statusEl: HTMLElement | null = null;
 
   connectedCallback() {
+    // Render into shadow DOM, not light DOM. CloudCannon's Visual Editor
+    // re-renders the Gallery component from server HTML (empty for this
+    // element) and morphs the light-DOM tree — which would strip a
+    // light-DOM dropzone, leaving a sized-but-blank (invisible) element.
+    // A shadow root is invisible to that morph, so the dropzone survives.
+    // `attachShadow` throws if called twice, so guard on an existing root.
+    if (this.shadowRoot) return;
     this.render();
   }
 
   private render() {
-    this.innerHTML = `
+    const root = this.attachShadow({ mode: "open" });
+    root.innerHTML = `
       <style>
         .miu-zone {
           display: flex; flex-direction: column; align-items: center;
@@ -160,9 +168,9 @@ class MultiImageUploader extends HTMLElement {
       </label>
     `;
 
-    const zone = this.querySelector<HTMLElement>(".miu-zone")!;
-    const input = this.querySelector<HTMLInputElement>("input")!;
-    this.statusEl = this.querySelector<HTMLElement>(".miu-status");
+    const zone = root.querySelector<HTMLElement>(".miu-zone")!;
+    const input = root.querySelector<HTMLInputElement>("input")!;
+    this.statusEl = root.querySelector<HTMLElement>(".miu-status");
 
     input.addEventListener("change", () => {
       if (input.files?.length) this.upload(input.files);
