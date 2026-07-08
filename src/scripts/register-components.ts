@@ -11,5 +11,3 @@ registerAstroComponent("LeftRight", LeftRight);
 registerAstroComponent("TextBlock", TextBlock);
 registerAstroComponent("PostHero", PostHero);
 registerAstroComponent("Gallery", Gallery);
-
-console.log("[MIU] register-components: registered Hero, LeftRight, TextBlock, PostHero, Gallery");
